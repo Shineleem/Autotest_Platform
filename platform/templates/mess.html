@@ -1,0 +1,75 @@
+                                    {% for key,value in report.items %}
+                                    {% for key,value in report.items %}
+                                    <td align="center">{{forloop.counter}}</td>
+                                    <td align="center">{{value}}</td>
+                                    <td align="center">{{key}}</td>
+                                        {% for key1,value1 in htmlstate.items %}
+                                            {% if key == key1 %}
+                                                 <!--0代表报告正在生成中 -->
+                                                {% if value1 == 'doing' %}
+                                                     <script language="JavaScript">
+                                                        function myrefresh()
+                                                            {
+                                                               window.location.reload();
+                                                            }
+                                                        setTimeout('myrefresh()',180000); //指定1秒刷新一次
+                                                    </script>
+                                                    <td align="center"><span class="badge badge-warning badge-pill ">Testing</span></td>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div id="status1" class="progress-bar progress-bar-success progress-bar-striped active" style="width: {{ progressstatus }}%;">
+                                                                <div id="status2" class="progress-value">{{ progressstatus }}%</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td align="center"><button class="btn btn-outline-danger m-b-5 m-t-5" data-toggle="tooltip" data-placement="right" disabled="true">Delete</button></td>
+                                                    <td align="center"><a href="http://{{addr}}:8000/case/" class="btn btn-warning m-b-5  m-t-5">Waiting</a></td>
+                                                {% endif %}
+                                                 <!--1 代表完成运行并且生成了报告 -->
+                                                {% if value1 == 'done' %}
+                                                    <td align="center"><span class="badge badge-info badge-pill">Done</span></td>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div class="progress-bar" style="width: 100%; background:#6fad47;">
+                                                                <span>100%</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td align="center"><button name="delname" value="{{value}}_{{key}}"  class="btn btn-outline-danger m-b-5 m-t-5" data-toggle="tooltip" data-placement="right" onclick="return confirm('是否删除报告？')">Delete</button></td>
+
+                                                    <td align="center"><button target="_self" onclick="javascript:window.open('/info/','_blank')" name="reportname" value="{{value}}_{{key}}" class="btn btn-info m-b-5 m-t-5">View</button></td>
+
+                                                {% endif %}
+                                                <!--false代表报告生成失败或者报告运行超时 -->
+                                                {% if value1 == 'false' %}
+                                                    <td align="center"><span class="badge badge-danger badge-pill ">Failure</span></td>
+                                                    <td>
+                                                        <div class="progresss">
+                                                            <div class="progress-bar progress-bar-success progress-bar-striped active" style="width:0%;">
+
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td align="center"><button name="delname" value="{{value}}_{{key}}"  class="btn btn-outline-danger m-b-5 m-t-5" data-toggle="tooltip" data-placement="right" onclick="return confirm('是否删除报告？')">Delete</button></td>
+                                                <td align="center"><a href="#" class="btn btn-danger disabled m-b-5 m-t-5">False</a></td>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+{#                                    <td align="center"><button name="delname" value="{{value}}_{{key}}"  class="btn btn-outline-danger m-b-5 m-t-5" data-toggle="tooltip" data-placement="right" onclick="return confirm('是否删除报告？')">Delete</button></td>#}
+{#                                        {% for key1,value1 in htmlstate.items %}#}
+{#                                            {% if key == key1 %}#}
+{#                                                {% if value1 == '1' %}#}
+{#                                                    <td align="center"><button name="reportname" value="{{value}}_{{key}}" class="btn btn-info m-b-5 m-t-5">View</button></td>#}
+{#                                                {% endif %}#}
+{#                                                {% if value1 == '0' %}#}
+{#                                                    <td align="center"><a href="http://{{addr}}:8000/case/" class="btn btn-warning m-b-5  m-t-5">Waiting</a></td>#}
+{#                                                {% endif %}#}
+{#                                                {% if value1 == '3' %}#}
+{#                                                    <td align="center"><a href="#" class="btn btn-danger disabled m-b-5 m-t-5">False</a></td>#}
+{#                                                {% endif %}#}
+{#                                        {% endif %}#}
+{##}
+{#                                        {% endfor %}#}
+                                </tr>
+                                    {% endfor %}
+                           

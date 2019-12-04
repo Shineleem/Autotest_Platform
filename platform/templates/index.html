@@ -1,0 +1,185 @@
+{%extends "baseauto.html" %}
+{% load staticfiles %}
+{% block mainbody %}
+ <!--这里是配置模块!-->
+<div class="app-content">
+    <form action="/index/" method="post" class="form-horizontal" onsubmit="return check()">
+     {% csrf_token %}
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
+        <div class="single-page construction-bg cover-image" data-image-src="{%  static "assets/img/dr.jpg" %}" style="background: center center;">
+            <div class="text-white text-center construction">
+                <h1 class="mb-0">自 动 化 测 试 平 台</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-xl-6 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>常规配置</h4>
+                </div>
+                <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputName" class="col-md-3 col-form-label">下载链接：</label>
+                            <div class="col-md-9">
+                                <input class="form-control" type="url" name="packageurl" placeholder="Download APK URL">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-md-3 col-form-label">设备数量：</label>
+                            <div class="col-md-9">
+                           <select name="devicesnumber" class="form-control select2 w-100 select2-hidden-accessible" tabindex="-10" aria-hidden="true">
+                               <option disabled="disabled" selected="selected">---选择设备(可用{{count}}台)---</option>
+                               {% for _ in count|get_range %}
+                                   <option>{{ forloop.counter }}</option>
+                               {% endfor %}
+                           </select>
+                        </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-md-3 col-form-label">邮&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱：</label>
+                            <div class="col-md-9">
+                                <input type="email" name="email" class="form-control" placeholder="Email address">
+                            </div>
+                        </div>
+            </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-xl-6 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>新包必选项</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label for="inputName" class="col-md-3 col-form-label">服务器：</label>
+                        <div class="col-md-9">
+                           <select name="server" class="form-control select2 w-100 select2-hidden-accessible" tabindex="-10" aria-hidden="true">
+                               <option disabled="disabled" selected="selected">---选择服务器---</option>
+                               <option>日补丁qq android一服</option>
+                               <option>日补丁qq android二服</option>
+                           </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputName" class="col-md-3 col-form-label">帐&nbsp;&nbsp;&nbsp;号：</label>
+                        <div class="col-md-9">
+                            <input type="text" name="username"  class="form-control" placeholder="几台设备就要几个账号、多账号用英文“,”隔开！">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputName" class="col-md-3 col-form-label">密&nbsp;&nbsp;&nbsp;码：</label>
+                        <div class="col-md-9">
+                            <input type="text" name="password" class="form-control" placeholder="账号密码，密码一样输入一个即可">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="float-right">
+                    <a data-collapse="#mycard-collapse" class="btn btn-icon"><i class="ion ion-minus"></i></a>
+                </div>
+                <h4>测试模块选择</h4>
+            </div>
+            <div class="collapse show" id="mycard-collapse">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-0 text-nowrap">
+                        <thead>
+                            <tr class="bg-primary text-center">
+                                <th colspan="12">测试内容配置</th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td colspan="2">
+                                <label class="custom-switch">
+                                    <input type="radio" name="check_box_step" checked="checked" value="step" class="custom-switch-input">
+                                    <span class="custom-switch-indicator"></span>
+                                </label>
+                            </td>
+                            <td colspan="4">单步测试</td>
+                            <td colspan="2">
+                                <label class="custom-switch">
+                                    <input type="radio" name="check_box_step" value="substep" class="custom-switch-input">
+                                    <span class="custom-switch-indicator"></span>
+                                </label>
+                            </td>
+                            <td colspan="4">分步测试</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <label class="custom-switch">
+                                    <input type="checkbox" name="check_box_smoke"  value="smoke" checked="checked" class="custom-switch-input">
+                                    <span class="custom-switch-indicator"></span>
+                                </label>
+                            </td>
+                            <td colspan="4">热更冒烟</td>
+{#                            <td colspan="2">#}
+{#                                <label class="custom-switch">#}
+{#                                    <input type="checkbox" name="check_box_list" value="all" class="custom-switch-input">#}
+{#                                    <span class="custom-switch-indicator"></span>#}
+{#                                </label>#}
+{#                            </td>#}
+{#                            <td colspan="2">全量</td>#}
+                            <td colspan="2">
+                                <label class="custom-switch text-center">
+                                    <input type="checkbox" name="check_box_performance" value="performance" class="custom-switch-input">
+                                    <span class="custom-switch-indicator"></span>
+                                </label>
+                            </td>
+                            <td colspan="4">性能</td>
+                        </tr>
+                        <thead>
+                        <thead>
+                            <tr class="bg-primary text-center">
+                                <th colspan="12">单功能测试</th>
+                            </tr>
+                        </thead>
+                        {% for  i in data %}
+                            <td>
+                                <label class="custom-switch">
+                                    <input type="checkbox" name="check_box_list" value="{{i}}" class="custom-switch-input">
+                                    <span class="custom-switch-indicator"></span>
+                                </label>
+                            </td>
+                               <td>{{i}}</td>
+                            {% if forloop.counter|divisibleby:6 %}
+                            <tr></tr>
+                            {% endif %}
+                        {% endfor %}
+                    <tr>
+                        <td colspan="16"></td>
+                    </tr>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="card-body text-center">
+
+                    <button name="start" class="buttoncolor blue tags" onclick="toastr.success('测试已经开始，请留意邮件的测试结果F5刷新查看报告', '嗨，小伙子！');">开始执行</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="reset" class="buttoncolor yellow tags" onclick="toastr.warning('模块已经重置，请重新选择模块开始测试', '嗨，小伙子！');">重置模块</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button name="stop" value="stop" class="buttoncolor red tags" onclick="return confirm('是否终止执行？')">终止执行</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{#                            <div class="modal-body">#}
+{#								<p class="mb-0">This is a modal with small size</p>#}
+{#							</div><!-- modal-body -->#}
+{#							<div class="modal-footer">#}
+{#								<button type="button" class="btn btn-primary">取消</button>#}
+{#								<button type="button" class="btn btn-success">确认</button>#}
+{#							</div>#}
+                </div>
+            </div>
+    </div>
+    </div>
+    </form>
+</div>
+ {% endblock %}

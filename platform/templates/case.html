@@ -1,0 +1,111 @@
+{%extends "baseauto.html" %}
+{% load staticfiles %}
+{% block mainbody %}
+<div class="app-content">
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
+        <div class="single-page construction-bg cover-image" data-image-src="{% static "assets/img/dr.jpg" %}" style="background: center center;">
+            <div class="text-white text-center construction">
+                <h1 class="mb-0">自 动 化 测 试 平 台</h1>
+            </div>
+        </div>
+    </div>
+   <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>模块测试结果</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-0 text-nowrap">
+{#                        <thead>#}
+{#                            <tr class="bg-primary text-center">#}
+{#                                <th colspan="12">全部测试模块</th>#}
+{#                            </tr>#}
+{#                        </thead>#}
+{#                        {% for  x in data %}#}
+{#                           <td>{{forloop.counter}}.{{x}}</td>#}
+{#                            {% if forloop.counter|divisibleby:12 %}#}
+{#                            <tr></tr>#}
+{#                            {% endif %}#}
+{#                        {% endfor %}#}
+                        <thead>
+                        <tr class="bg-primary text-center">
+                                <th colspan="12">未测试模块【<span id="undonenum">{{ undonenum }}</span>】</th>
+                            </tr>
+                        </thead>
+                    <tbody  id="undonelist">
+                        {% for  y in undonelist %}
+                            <td style="color: #fab209">{{forloop.counter}}.{{y}}</td>
+                            {% if forloop.counter|divisibleby:12 %}
+                            <tr></tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody >
+                        <thead>
+                        <tr class="bg-primary text-center">
+                                <th colspan="12">已测试模块【<span  id="donenum">{{ donenum }}</span>】</th>
+                            </tr>
+                        </thead>
+                        <tbody  id="donelist">
+                        {% for  z in donelist %}
+                               <td style="color: #6fad47">{{forloop.counter}}.{{z}}</td>
+                            {% if forloop.counter|divisibleby:12 %}
+                            <tr></tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody >
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+       <script type="text/javascript">
+        function getcase(){ //定义一个获取进度条的函数
+            $.ajax({
+                url:"{% url "getcase" %}",
+                type:"get",
+                dataType:"json",
+                success:function(result){
+                    if (result.notdo==404){
+                        return;
+                    }else{
+                        $("#undonenum").html(result.undonenum);
+                        $("#donenum").html(result.donenum);
+                        $("#donelist").children().remove();
+                        var donelist = result.donelist;
+                        for (var i = 0;i < donelist.length; i++){
+                            var td = '<td style="color: #6fad47">' + (i+1)+ "."  + donelist[i] + '</td>';
+                            $("#donelist").append(td);
+                            if (Math.round((i+1)%12)==0){
+                                var tr = '<tr></tr>';
+                                $("#donelist").append(tr)
+                            }
+                        }
+                        $("#undonelist").children().remove();
+                        var undonelist = result.undonelist;
+                        for (var i = 0;i < undonelist.length; i++){
+                            var td = '<td style="color: #fab209">' + (i+1)+ "."  + undonelist[i] + '</td>';
+                            $("#undonelist").append(td);
+                            if (Math.round((i+1)%12)==0){
+                                var tr = '<tr></tr>';
+                                $("#undonelist").append(tr)
+                            }
+                        }
+                        if (result.undonenum<3){
+                            setTimeout('getcase();', 1000);
+                        }else{
+                            setTimeout('getcase();', 60*1000);
+                        }
+                    }
+                }
+            });
+
+        }
+        $(document).ready(function(){
+            getcase() //函数运行启动函数
+        });
+    </script>
+{% endblock %}

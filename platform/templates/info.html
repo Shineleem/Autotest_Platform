@@ -1,0 +1,41 @@
+{%extends "baseauto.html" %}
+{% load staticfiles %}
+{% block mainbody %}
+<div class="app-content">
+    {% if reporthtml != '' %}
+        <div class="col-md-12 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                     <iframe id="frame_content" src="{{reporthtml}}" scrolling="no" frameborder="0" onload="this.height=100" width="100%"></iframe>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block script %}
+<script>
+$(document).ready(function () {
+
+     if(location.href.indexOf("#reloaded")==-1){
+        location.href=location.href+"#reloaded";
+        location.reload();
+    }
+ })
+</script>
+    <script type="text/javascript">
+
+
+
+function reinitIframe(){
+    var iframe = document.getElementById("frame_content");
+    try{
+    var bHeight = iframe.contentWindow.document.body.scrollHeight;
+    var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+    var height = Math.max(bHeight, dHeight);
+    iframe.height =  height;
+    }catch (ex){}
+}
+window.setInterval("reinitIframe()", 200);
+</script>
+{% endblock %}

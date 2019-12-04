@@ -1,0 +1,1 @@
+# -*- coding: utf-8 -*-__author__ = "Lee.le"from Views.tools import *from django.shortcuts import renderdef lists(request):    """        显示测试用例内容        :param request:        :return:        """    if request.method == 'POST':        pass    return render(request, "items.html", {'addr': get_addr()})
