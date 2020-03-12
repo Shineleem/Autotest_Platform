@@ -29,7 +29,7 @@ def start(request):
                 os.system(f'sh {path}')
 
         else:
-            packageurl = request.POST.get("packageurl")  # "http://art.123u.com/lzghwnew5/arts/t_20190603171414.apk"
+            packageurl = request.POST.get("packageurl")
             devicesnumber = request.POST.get("devicesnumber")
             email = request.POST.get("email")  # 接受报告的邮件
             check_box_list = request.POST.getlist('check_box_list') # 需要测试的模块
